@@ -1,15 +1,21 @@
-# Vercel
-.vercel
-
 # Node modules
 node_modules/
 server/node_modules/
+
+# Vercel
+.vercel
 
 # SQLite database files
 *.sqlite
 *.sqlite-shm
 *.sqlite-wal
+*.db-shm
+*.db-wal
 
 # Temp files
 tracked.txt
 tracked_files.txt
+
+# OS & Env
+.DS_Store
+.env

@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriCoop</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600;700;800;900&family=Noto+Sans+Devanagari:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'agri-dark': '#153127',
+                        'agri-green': '#1b4332',
+                        'agri-yellow': '#ffb703',
+                        'agri-light': '#f8fafc',
+                    },
+                    fontFamily: {
+                        sans: ['Outfit', 'Noto Sans Devanagari', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .hero-bg {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('./assets/hero_background_agriculture_1771235574013.png');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .nav-link {
+            transition: color 0.3s ease;
+        }
+    </style>
+</head>
+
+<body class="bg-agri-light text-slate-800 font-sans">
+    <!-- Navbar -->
+    <nav class="fixed w-full z-50 bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 bg-agri-dark rounded flex items-center justify-center text-white font-bold text-lg">
+                    A</div>
+                <span class="text-2xl font-bold text-agri-dark">AgriCoop</span>
+            </div>
+            <div class="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-600">
+                <a href="#home" class="hover:text-agri-green nav-link">Home</a>
+                <a href="analytics.html" class="hover:text-agri-green nav-link">Analytics</a>
+                <a href="market.html" class="hover:text-agri-green nav-link">Marketplace</a>
+                <a href="#pillars" class="hover:text-agri-green nav-link">Our Pillars</a>
+                <a href="#market" class="hover:text-agri-green nav-link">Market Prices</a>
+                <a href="#contact" class="hover:text-agri-green nav-link">Contact</a>
+            </div>
+            <div class="flex items-center gap-6">
+                <!-- Lang Dropdown -->
+                <div class="relative group cursor-pointer text-sm font-semibold flex items-center gap-1 text-slate-600">
+                    <span>English</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </div>
+                <button id="auth-btn" onclick="document.getElementById('auth-modal').classList.remove('hidden')"
+                    class="bg-agri-dark text-white px-6 py-2.5 rounded-full text-sm font-bold hover:bg-agri-green transition-all shadow-md">
+                    Sign In
+                </button>
+                <div id="user-profile" class="hidden items-center gap-3">
+                    <span id="user-email" class="text-sm font-semibold text-slate-700"></span>
+                    <button id="logout-btn" class="text-sm text-red-500 font-bold hover:underline">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section id="home" class="hero-bg h-screen flex items-center justify-center pt-20">
+        <div class="max-w-4xl mx-auto px-6 text-center text-white">
+            <div class="inline-block px-5 py-2 bg-white/10 backdrop-blur rounded-full border border-white/20 mb-8">
+                <p class="text-xs font-bold uppercase tracking-widest text-agri-yellow">Powering Rural Innovation</p>
+            </div>
+            <h1 class="text-5xl md:text-7xl font-extrabold mb-6 leading-tight">
+                Farming for the <br><span class="text-agri-yellow">Future Generation</span>
+            </h1>
+            <p class="text-xl md:text-2xl font-medium text-slate-100 mb-10 max-w-3xl mx-auto leading-relaxed">
+                Connecting farmers with technology, markets, and education to build a sustainable food ecosystem.
+            </p>
+
+            <div class="mt-16">
+                <svg class="w-6 h-6 mx-auto animate-bounce text-white/50" fill="none" stroke="currentColor"
+                    viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pillars Section -->
+    <section id="pillars" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <p class="text-sm font-bold text-agri-green tracking-widest uppercase mb-3">Our Mission</p>
+                <h2 class="text-4xl font-extrabold text-slate-900 mb-6">The Three Pillars of Growth</h2>
+                <div class="w-16 h-1.5 bg-agri-yellow mx-auto"></div>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Card 1 -->
+                <div
+                    class="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden flex flex-col group hover:shadow-lg transition-all">
+                    <div class="relative h-56 overflow-hidden">
+                        <img src="./assets/smart_farming_iot_1771235589906.png" alt="Smart Farming"
+                            class="w-full h-full object-cover group-hover:scale-105 transition-all duration-500">
+                        <div
+                            class="absolute top-4 right-4 w-10 h-10 bg-white rounded-xl shadow-md flex items-center justify-center text-agri-green">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z">
+                                </path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="p-8 flex-1">
+                        <h3 class="text-xl font-bold mb-3 text-slate-900">AI-Powered Farming Intelligence</h3>
+                        <p class="text-slate-600 text-sm leading-relaxed">Leveraging advanced data analytics, IoT sensors, and our AI Plant Doctor to forecast crop health, track market trends, and optimize every drop of water for a sustainable future.</p>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div
+                    class="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden flex flex-col group hover:shadow-lg transition-all">
+                    <div class="relative h-56 overflow-hidden">
+                        <img src="./assets/food_processing_tech_1771235606534.png" alt="Food Processing"
+                            class="w-full h-full object-cover group-hover:scale-105 transition-all duration-500">
+                        <div
+                            class="absolute top-4 right-4 w-10 h-10 bg-white rounded-xl shadow-md flex items-center justify-center text-agri-green">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z">
+                                </path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="p-8 flex-1">
+                        <h3 class="text-xl font-bold mb-3 text-slate-900">Fair-Trade Digital Marketplace</h3>
+                        <p class="text-slate-600 text-sm leading-relaxed">Eliminating middlemen by connecting farmers directly with buyers. Our AI automatically compares deals to ensure farmers get higher margins and customers get the lowest delivered prices.</p>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div
+                    class="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden flex flex-col group hover:shadow-lg transition-all">
+                    <div class="relative h-56 overflow-hidden">
+                        <img src="./assets/rural_skill_development_1771235655258.png" alt="Skill Development"
+                            class="w-full h-full object-cover group-hover:scale-105 transition-all duration-500">
+                        <div
+                            class="absolute top-4 right-4 w-10 h-10 bg-white rounded-xl shadow-md flex items-center justify-center text-agri-green">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253">
+                                </path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="p-8 flex-1">
+                        <h3 class="text-xl font-bold mb-3 text-slate-900">Rural Skill Empowerment</h3>
+                        <p class="text-slate-600 text-sm leading-relaxed">Empowering agricultural communities with digital literacy, expert agronomy consultations, and the business management skills necessary to thrive in tomorrow's economy.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Market Prices -->
+    <section id="market" class="py-24 bg-agri-light">
+        <div class="max-w-5xl mx-auto px-6">
+            <div class="bg-white rounded-3xl shadow-lg border border-slate-100 overflow-hidden">
+                <!-- Header -->
+                <div class="bg-[#244837] text-white p-8 pb-10 rounded-t-3xl flex justify-between items-start">
+                    <div>
+                        <div class="flex items-center gap-2 mb-2">
+                            <svg class="w-5 h-5 text-agri-yellow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                            </svg>
+                            <h2 class="text-2xl font-bold">Live Market Prices</h2>
+                        </div>
+                        <p class="text-slate-300 text-sm">Real-time commodity rates from major mandis</p>
+                    </div>
+                    <span
+                        class="px-4 py-1.5 bg-white/10 rounded-full text-xs font-medium border border-white/20">Updated:
+                        Just now</span>
+                </div>
+
+                <!-- Table -->
+                <div class="p-8 pt-0 -mt-2 bg-white rounded-t-xl">
+                    <div class="overflow-x-auto w-full">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr
+                                    class="text-xs font-bold text-slate-400 uppercase tracking-widest border-b border-slate-100">
+                                    <th class="py-4 font-semibold">COMMODITY</th>
+                                    <th class="py-4 font-semibold">UNIT</th>
+                                    <th class="py-4 font-semibold">PRICE (INR)</th>
+                                    <th class="py-4 font-semibold">TREND</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-sm">
+                                <tr class="border-b border-slate-50">
+                                    <td class="py-5 font-bold text-slate-800">Wheat (Lokwan)</td>
+                                    <td class="py-5 text-slate-500">Quintal</td>
+                                    <td class="py-5 font-bold text-slate-800">₹2,850</td>
+                                    <td class="py-5">
+                                        <span
+                                            class="inline-flex items-center gap-1 text-green-600 bg-green-50 px-2.5 py-1 rounded font-medium text-xs">
+                                            ↑ +1.2%
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr class="border-b border-slate-50">
+                                    <td class="py-5 font-bold text-slate-800">Rice (Basmati)</td>
+                                    <td class="py-5 text-slate-500">Quintal</td>
+                                    <td class="py-5 font-bold text-slate-800">₹4,200</td>
+                                    <td class="py-5">
+                                        <span
+                                            class="inline-flex items-center gap-1 text-green-600 bg-green-50 px-2.5 py-1 rounded font-medium text-xs">
+                                            ↑ +0.5%
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr class="border-b border-slate-50">
+                                    <td class="py-5 font-bold text-slate-800">Corn / Maize</td>
+                                    <td class="py-5 text-slate-500">Quintal</td>
+                                    <td class="py-5 font-bold text-slate-800">₹2,100</td>
+                                    <td class="py-5">
+                                        <span
+                                            class="inline-flex items-center gap-1 text-red-500 bg-red-50 px-2.5 py-1 rounded font-medium text-xs">
+                                            ↓ -0.8%
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="py-5 font-bold text-slate-800">Soybean</td>
+                                    <td class="py-5 text-slate-500">Quintal</td>
+                                    <td class="py-5 font-bold text-slate-800">₹4,850</td>
+                                    <td class="py-5">
+                                        <span
+                                            class="inline-flex items-center gap-1 text-slate-400 bg-slate-50 px-2.5 py-1 rounded font-medium text-xs">
+                                            - 0.0%
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer / Registration Form -->
+    <footer id="contact" class="bg-[#1f2937] text-white py-20 px-6">
+        <div class="max-w-7xl mx-auto flex flex-col lg:flex-row justify-between items-center gap-16">
+            <div class="flex-1 space-y-8">
+                <div class="flex items-center gap-3">
+                    <div
+                        class="w-10 h-10 bg-agri-yellow text-agri-dark rounded-lg flex items-center justify-center font-bold text-xl">
+                        A</div>
+                    <span class="text-3xl font-bold">AgriCoop</span>
+                </div>
+                <p class="text-slate-300 max-w-md leading-relaxed">
+                    Join our network of over 10,000 farmers converting to sustainable practices. Together, we grow the
+                    future.
+                </p>
+                <div class="space-y-4 pt-4">
+                    <div class="flex items-center gap-4 text-slate-300">
+                        <div
+                            class="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center text-agri-yellow">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z">
+                                </path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            </svg>
+                        </div>
+                        <span class="text-sm">123 Green Valley Road, Agro Tech Park, KA 560001</span>
+                    </div>
+                    <div class="flex items-center gap-4 text-slate-300">
+                        <div
+                            class="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center text-agri-yellow">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z">
+                                </path>
+                            </svg>
+                        </div>
+                        <span class="text-sm">+91 98765 43210</span>
+                    </div>
+                    <div class="flex items-center gap-4 text-slate-300">
+                        <div
+                            class="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center text-agri-yellow">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">
+                                </path>
+                            </svg>
+                        </div>
+                        <span class="text-sm">contact@agricoop.org</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex-1 w-full max-w-lg">
+                <div class="bg-white rounded-2xl p-8 text-slate-800 shadow-xl">
+                    <h3 class="text-2xl font-bold mb-2">Register your Farm</h3>
+                    <p class="text-slate-500 text-sm mb-6">Get exclusive access to market insights and tech support.</p>
+
+                    <form class="space-y-5" id="register-form">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">First Name</label>
+                                <input id="reg-first-name" type="text" placeholder="John" required
+                                    class="w-full px-4 py-2.5 rounded-lg border border-slate-200 outline-none focus:border-agri-green focus:ring-1 focus:ring-agri-green transition-all text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Last Name</label>
+                                <input id="reg-last-name" type="text" placeholder="Doe" required
+                                    class="w-full px-4 py-2.5 rounded-lg border border-slate-200 outline-none focus:border-agri-green focus:ring-1 focus:ring-agri-green transition-all text-sm">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Farm Location</label>
+                            <input id="reg-location" type="text" placeholder="Village, District" required
+                                class="w-full px-4 py-2.5 rounded-lg border border-slate-200 outline-none focus:border-agri-green focus:ring-1 focus:ring-agri-green transition-all text-sm">
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Email Address</label>
+                                <input id="reg-email" type="email" placeholder="farmer@example.com" required
+                                    class="w-full px-4 py-2.5 rounded-lg border border-slate-200 outline-none focus:border-agri-green focus:ring-1 focus:ring-agri-green transition-all text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Farm Size (Acres)</label>
+                                <input id="reg-size" type="number" placeholder="5" required min="0.1" step="0.1"
+                                    class="w-full px-4 py-2.5 rounded-lg border border-slate-200 outline-none focus:border-agri-green focus:ring-1 focus:ring-agri-green transition-all text-sm">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Crop Type</label>
+                            <select id="reg-crop" required
+                                class="w-full px-4 py-2.5 rounded-lg border border-slate-200 outline-none focus:border-agri-green focus:ring-1 focus:ring-agri-green transition-all text-sm appearance-none bg-white">
+                                <option disabled selected value="">Select primary crop</option>
+                                <option value="Wheat">Wheat</option>
+                                <option value="Rice">Rice</option>
+                                <option value="Sugarcane">Sugarcane</option>
+                                <option value="Cotton">Cotton</option>
+                            </select>
+                        </div>
+                        <div id="reg-message" class="hidden text-sm font-semibold rounded-lg text-center"></div>
+                        <button type="submit" id="reg-submit-btn"
+                            class="w-full bg-[#153127] hover:bg-[#1b4332] text-white font-bold py-3.5 rounded-lg mt-2 transition-all text-sm">
+                            Submit Registration
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- Auth Modal -->
+    <div id="auth-modal" class="fixed inset-0 z-[100] hidden">
+        <div class="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity"
+            onclick="document.getElementById('auth-modal').classList.add('hidden')"></div>
+        <div class="fixed inset-0 flex items-center justify-center p-4 pointer-events-none">
+            <div
+                class="bg-white rounded-3xl shadow-2xl w-full max-w-sm p-8 relative pointer-events-auto transform transition-all">
+                <button onclick="document.getElementById('auth-modal').classList.add('hidden')"
+                    class="absolute top-4 right-4 text-slate-400 hover:text-slate-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                        </path>
+                    </svg>
+                </button>
+                <div class="text-center mb-6">
+                    <div
+                        class="w-12 h-12 bg-agri-dark rounded-xl flex items-center justify-center text-white font-bold text-xl mx-auto mb-4">
+                        A</div>
+                    <h3 id="modal-title" class="text-xl font-bold text-slate-900">Welcome Back</h3>
+                    <p id="modal-desc" class="text-sm text-slate-500 mt-1">Sign in to your AgriCoop account</p>
+                </div>
+                <div id="auth-error"
+                    class="hidden mb-4 p-3 bg-red-50 text-red-600 text-xs rounded-lg font-medium text-center"></div>
+                <form id="auth-form" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Email Address</label>
+                        <input type="email" id="auth-email" required
+                            class="w-full px-4 py-3 rounded-xl border border-slate-200 outline-none focus:border-agri-green focus:ring-1 focus:ring-agri-green transition-all text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Password</label>
+                        <input type="password" id="auth-password" required
+                            class="w-full px-4 py-3 rounded-xl border border-slate-200 outline-none focus:border-agri-green focus:ring-1 focus:ring-agri-green transition-all text-sm">
+                    </div>
+                    <button type="submit" id="auth-submit-btn"
+                        class="w-full bg-[#153127] hover:bg-[#1b4332] text-white font-bold py-3.5 rounded-xl mt-2 transition-all shadow-md">
+                        Sign In
+                    </button>
+                </form>
+                <div class="mt-6 text-center text-sm">
+                    <span id="auth-toggle-text" class="text-slate-500">Don't have an account?</span>
+                    <button id="auth-toggle-btn" class="text-agri-green font-bold hover:underline ml-1">Register
+                        now</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <!-- Firebase SDK Setup -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-analytics.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCURW8zBb_BkTvEbmY9Wf3bPQBFZy9itUE",
+            authDomain: "agricoop-4321.firebaseapp.com",
+            projectId: "agricoop-4321",
+            storageBucket: "agricoop-4321.firebasestorage.app",
+            messagingSenderId: "399916394426",
+            appId: "1:399916394426:web:092ed1dbdc5bd20cc31f83",
+            measurementId: "G-MJ6D9X1X63"
+        };
+
+        let app, auth, analytics, db;
+        try {
+            app = initializeApp(firebaseConfig);
+            auth = getAuth(app);
+            analytics = getAnalytics(app);
+            db = getFirestore(app);
+        } catch (e) {
+            console.warn("Firebase not properly configured:", e);
+        }
+
+        let isLoginMode = true;
+        const authBtn = document.getElementById('auth-btn');
+        const userProfile = document.getElementById('user-profile');
+        const userEmailSpan = document.getElementById('user-email');
+        const logoutBtn = document.getElementById('logout-btn');
+        const authModal = document.getElementById('auth-modal');
+        const authForm = document.getElementById('auth-form');
+        const authEmail = document.getElementById('auth-email');
+        const authPassword = document.getElementById('auth-password');
+        const authToggleBtn = document.getElementById('auth-toggle-btn');
+        const modalTitle = document.getElementById('modal-title');
+        const modalDesc = document.getElementById('modal-desc');
+        const authSubmitBtn = document.getElementById('auth-submit-btn');
+        const authToggleText = document.getElementById('auth-toggle-text');
+        const authError = document.getElementById('auth-error');
+
+        authToggleBtn.addEventListener('click', () => {
+            isLoginMode = !isLoginMode;
+            authError.classList.add('hidden');
+            if (isLoginMode) {
+                modalTitle.textContent = 'Welcome Back';
+                modalDesc.textContent = 'Sign in to your AgriCoop account';
+                authSubmitBtn.textContent = 'Sign In';
+                authToggleText.textContent = "Don't have an account?";
+                authToggleBtn.textContent = 'Register now';
+            } else {
+                modalTitle.textContent = 'Create Account';
+                modalDesc.textContent = 'Join the AgriCoop network';
+                authSubmitBtn.textContent = 'Register';
+                authToggleText.textContent = "Already have an account?";
+                authToggleBtn.textContent = 'Sign in';
+            }
+        });
+
+        authForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = authEmail.value;
+            const password = authPassword.value;
+            authError.classList.add('hidden');
+            authSubmitBtn.disabled = true;
+            authSubmitBtn.style.opacity = '0.7';
+
+            try {
+                if (!auth || firebaseConfig.apiKey === "YOUR_API_KEY") {
+                    throw new Error("Please replace the Firebase Config in the source code with your actual credentials.");
+                }
+                if (isLoginMode) {
+                    await signInWithEmailAndPassword(auth, email, password);
+                    alert("Login successful! Attempting to send email...");
+                    
+                    // Trigger the backend to send the email
+                    try {
+                        const emailRes = await fetch('http://localhost:3000/api/login-notify', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ email: email })
+                        });
+                        if(emailRes.ok) {
+                            console.log('Login email notification sent successfully via AgriCoop Server!');
+                        }
+                    } catch(err) {
+                        console.error('Failed to trigger the email server.', err);
+                    }
+                } else {
+                    await createUserWithEmailAndPassword(auth, email, password);
+                    await sendEmailVerification(auth.currentUser);
+                    alert("Verification email sent to your Gmail! Please check your inbox before logging in.");
+                }
+                authModal.classList.add('hidden');
+                authForm.reset();
+            } catch (error) {
+                authError.textContent = error.message;
+                authError.classList.remove('hidden');
+            } finally {
+                authSubmitBtn.disabled = false;
+                authSubmitBtn.style.opacity = '1';
+            }
+        });
+
+        logoutBtn.addEventListener('click', async () => {
+            if (auth) await signOut(auth);
+        });
+
+        if (auth) {
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    authBtn.classList.add('hidden');
+                    userProfile.classList.remove('hidden');
+                    userProfile.classList.add('flex');
+                    userEmailSpan.textContent = user.email;
+                    localStorage.setItem('userEmail', user.email);
+                } else {
+                    authBtn.classList.remove('hidden');
+                    userProfile.classList.add('hidden');
+                    userProfile.classList.remove('flex');
+                    userEmailSpan.textContent = '';
+                    localStorage.removeItem('userEmail');
+                }
+            });
+        }
+
+        const regForm = document.getElementById('register-form');
+        const regMessage = document.getElementById('reg-message');
+        if (regForm) {
+            regForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const btn = document.getElementById('reg-submit-btn');
+                btn.disabled = true;
+                btn.innerText = 'Submitting...';
+                
+                const data = {
+                    first_name: document.getElementById('reg-first-name').value,
+                    last_name: document.getElementById('reg-last-name').value,
+                    farm_location: document.getElementById('reg-location').value,
+                    crop_type: document.getElementById('reg-crop').value,
+                    email: document.getElementById('reg-email').value,
+                    farm_size: document.getElementById('reg-size').value,
+                };
+                
+                try {
+                    console.log("Starting submission for:", data);
+
+                    // 1. Local Backend Save - We check this FIRST
+                    const res = await fetch('http://localhost:3000/api/register', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
+                    });
+                    
+                    if (!res.ok) throw new Error("Local server registration failed.");
+                    const result = await res.json();
+
+                    // 2. Firebase Firestore Save (Non-blocking / Background)
+                    if (db) {
+                        addDoc(collection(db, "registrations"), {
+                            ...data,
+                            created_at: serverTimestamp()
+                        }).then(() => console.log("Firebase sync complete"))
+                          .catch(e => console.warn("Firebase sync error (check your rules!):", e));
+                    }
+                    
+                    // 3. True Success State
+                    regMessage.classList.remove('hidden', 'text-red-500');
+                    regMessage.classList.add('text-green-500', 'p-3', 'bg-green-50', 'mb-4');
+                    regMessage.innerText = 'Farm registered successfully!';
+                    alert('Submitted successfully!');
+                    regForm.reset();
+
+                } catch (err) {
+                    console.error("Submission error:", err);
+                    regMessage.classList.remove('hidden', 'text-green-500');
+                    regMessage.classList.add('text-red-500', 'p-3', 'bg-red-50', 'mb-4');
+                    regMessage.innerText = 'Network error: Make sure your local server is running (node server.js)';
+                    alert('Submission failed. Check console for details.');
+                } finally {
+                    btn.disabled = false;
+                    btn.innerText = 'Submit Registration';
+                }
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,1 +1,15 @@
+# Vercel
 .vercel
+
+# Node modules
+node_modules/
+server/node_modules/
+
+# SQLite database files
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+
+# Temp files
+tracked.txt
+tracked_files.txt

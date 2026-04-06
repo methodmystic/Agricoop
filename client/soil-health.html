@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriCoop | Soil Health & Fertilizer Intelligence</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600;700;800;900&family=Noto+Sans+Devanagari:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#064e3b',
+                        secondary: '#10b981',
+                        accent: '#fbbf24',
+                        dark: '#022c22',
+                        light: '#f0fdf4',
+                        soil: '#78350f',
+                    },
+                    fontFamily: {
+                        sans: ['Outfit', 'Noto Sans Devanagari', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #f8fafc;
+            overflow-x: hidden;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+
+        .premium-shadow {
+            box-shadow: 0 40px 100px -20px rgba(6, 78, 59, 0.1);
+        }
+
+        .data-card {
+            background: white;
+            border-radius: 3rem;
+            padding: 3rem;
+            border: 1px solid #f1f5f9;
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .data-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 50px 100px -30px rgba(6, 78, 59, 0.15);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #10b981, #064e3b);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .blob-bg {
+            filter: blur(100px);
+            opacity: 0.2;
+            z-index: -1;
+        }
+
+        .input-field {
+            background: #f8fafc;
+            border: 2px solid #f1f5f9;
+            transition: all 0.3s ease;
+        }
+
+        .input-field:focus {
+            border-color: #10b981;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+        }
+
+        .btn-premium {
+            background: linear-gradient(135deg, #064e3b, #10b981);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .btn-premium:hover {
+            transform: scale(1.02) translateY(-2px);
+            box-shadow: 0 20px 40px -10px rgba(6, 78, 59, 0.3);
+        }
+
+        .result-gradient {
+            background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%);
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-slide-up {
+            animation: slideUp 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+        }
+    </style>
+</head>
+
+<body class="text-dark antialiased font-sans">
+    <!-- Blur Orbs -->
+    <div class="fixed top-[-20%] left-[-10%] w-[800px] h-[800px] bg-secondary blob-bg rounded-full"></div>
+    <div class="fixed bottom-[-20%] right-[-10%] w-[800px] h-[800px] bg-soil blob-bg rounded-full"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-[100] px-6 py-6" id="main-nav">
+        <div
+            class="max-w-7xl mx-auto flex items-center justify-between glass px-8 py-4 rounded-[2.5rem] premium-shadow">
+            <a href="index.html" class="flex items-center gap-4 group">
+                <div
+                    class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white font-black text-xl shadow-lg group-hover:rotate-12 transition-transform">
+                    A</div>
+                <span class="text-2xl font-extrabold tracking-tighter text-primary">AgriCoop</span>
+            </a>
+
+            <div class="hidden md:flex items-center gap-8 text-sm font-bold text-gray-600">
+                <a href="index.html" class="hover:text-primary transition-colors">Home</a>
+                <a href="analytics.html" class="hover:text-primary transition-colors">Analytics</a>
+                <a href="market.html" class="hover:text-primary transition-colors">Marketplace</a>
+                <a href="soil-health.html" data-i18n="soil_nav" class="text-primary border-b-2 border-primary">Soil Health</a>
+            </div>
+
+            <div class="flex items-center gap-6">
+                <!-- Lang Toggle -->
+                <button onclick="switchLanguage()"
+                    class="px-6 py-2.5 bg-primary/5 rounded-full font-bold text-xs uppercase tracking-widest border border-primary/10 hover:bg-white transition-all">
+                    <span id="lang-btn-text">हिन्दी</span>
+                </button>
+                <a href="index.html" data-i18n="back_btn"
+                    class="bg-dark text-white px-8 py-3 rounded-full font-black text-xs uppercase tracking-widest shadow-xl hover:bg-secondary transition-all">←
+                    Back</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="pt-48 pb-32 px-6 max-w-7xl mx-auto">
+        <header class="mb-24 space-y-8 animate-slide-up">
+            <div
+                class="inline-flex items-center gap-3 px-6 py-2.5 bg-soil/10 rounded-full border border-soil/20">
+                <span class="w-2 h-2 bg-soil rounded-full animate-pulse"></span>
+                <span class="text-xs font-black uppercase tracking-[0.2em] text-soil">Sustainable Soil Intelligence</span>
+            </div>
+            <h1 data-i18n="soil_page_title" class="text-5xl md:text-6xl font-extrabold text-dark leading-tight tracking-tighter">
+                Nurture Your Land <br /> with <span class="gradient-text">Precision Health</span>
+            </h1>
+            <p data-i18n="soil_page_desc" class="text-lg text-gray-500 max-w-2xl font-light leading-relaxed">
+                Reduce fertilizer waste and maximize yield. Our data-driven engine analyzes your soil metrics to provide hyper-tailored nutrient recommendations.
+            </p>
+        </header>
+
+        <div class="grid lg:grid-cols-12 gap-12">
+            <!-- Soil Input Form -->
+            <div class="lg:col-span-5 data-card animate-slide-up" style="animation-delay: 0.1s;">
+                <h3 data-i18n="analysis_params" class="text-2xl font-black mb-8 tracking-tighter flex items-center gap-3">
+                    <svg class="w-8 h-8 text-soil" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                    </svg>
+                    Analysis Parameters
+                </h3>
+                
+                <form id="soil-form" class="space-y-6">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-2">
+                            <label class="text-xs font-black uppercase tracking-widest text-gray-400">Nitrogen (N)</label>
+                            <input type="number" id="nitrogen" placeholder="mg/kg" required class="w-full px-5 py-4 rounded-2xl input-field outline-none font-bold text-dark">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-xs font-black uppercase tracking-widest text-gray-400">Phosphorus (P)</label>
+                            <input type="number" id="phosphorus" placeholder="mg/kg" required class="w-full px-5 py-4 rounded-2xl input-field outline-none font-bold text-dark">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-2">
+                            <label class="text-xs font-black uppercase tracking-widest text-gray-400">Potassium (K)</label>
+                            <input type="number" id="potassium" placeholder="mg/kg" required class="w-full px-5 py-4 rounded-2xl input-field outline-none font-bold text-dark">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-xs font-black uppercase tracking-widest text-gray-400">pH Level</label>
+                            <input type="number" id="ph" placeholder="0-14" step="0.1" required class="w-full px-5 py-4 rounded-2xl input-field outline-none font-bold text-dark">
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="text-xs font-black uppercase tracking-widest text-gray-400">Target Crop</label>
+                        <select id="crop" required class="w-full px-5 py-4 rounded-2xl input-field outline-none font-bold text-dark appearance-none bg-white">
+                            <option value="" disabled selected>Select your crop</option>
+                            <option value="wheat">Wheat</option>
+                            <option value="rice">Rice</option>
+                            <option value="maize">Maize</option>
+                            <option value="cotton">Cotton</option>
+                            <option value="soybean">Soybean</option>
+                        </select>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-2">
+                            <label class="text-xs font-black uppercase tracking-widest text-gray-400">Temperature (°C)</label>
+                            <input type="number" id="temp" placeholder="25" required class="w-full px-5 py-4 rounded-2xl input-field outline-none font-bold text-dark">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-xs font-black uppercase tracking-widest text-gray-400">Humidity (%)</label>
+                            <input type="number" id="humidity" placeholder="60" required class="w-full px-5 py-4 rounded-2xl input-field outline-none font-bold text-dark">
+                        </div>
+                    </div>
+
+                    <button data-i18n="gen_rec" type="submit" class="w-full py-6 btn-premium text-white rounded-2xl font-black text-sm uppercase tracking-[0.2em] shadow-xl">
+                        Generate Recommendation
+                    </button>
+                </form>
+            </div>
+
+            <!-- Analysis Results -->
+            <div id="results-container" class="lg:col-span-7 space-y-12 opacity-0 transform translate-y-10 transition-all duration-1000">
+                <div class="data-card result-gradient relative overflow-hidden">
+                    <div class="relative z-10">
+                        <div class="flex justify-between items-start mb-12">
+                            <div>
+                                <h3 data-i18n="nutrient_profile" class="text-3xl font-extrabold tracking-tighter mb-2">Nutrient Profile</h3>
+                                <p data-i18n="nutrient_desc" class="text-gray-500 font-light">Visual representation of soil health status</p>
+                            </div>
+                            <div class="px-6 py-2 bg-secondary/10 border border-secondary/20 rounded-full">
+                                <span id="health-status" class="text-sm font-black text-secondary tracking-widest uppercase text-xs">Processing...</span>
+                            </div>
+                        </div>
+
+                        <div class="grid md:grid-cols-2 gap-12 items-center">
+                            <div class="h-[300px] relative">
+                                <canvas id="nutrientChart"></canvas>
+                            </div>
+                            <div class="space-y-8">
+                                <div class="p-6 bg-white rounded-3xl border border-gray-100 shadow-sm">
+                                    <p class="text-xs font-black text-gray-400 uppercase tracking-widest mb-4">Top Recommendation</p>
+                                    <h4 id="rec-title" class="text-2xl font-black text-primary mb-2">Calculating...</h4>
+                                    <p id="rec-desc" class="text-sm text-gray-500 leading-relaxed">Please input your soil data to receive tailored advice.</p>
+                                </div>
+                                <div class="p-6 bg-soil/5 rounded-3xl border border-soil/10">
+                                    <p class="text-xs font-black text-soil uppercase tracking-widest mb-2">Actionable Insight</p>
+                                    <p id="action-insight" class="text-sm text-gray-600 font-medium italic leading-relaxed">"Sustainable practices lead to 20% higher multi-year yield."</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Decorative scanning line -->
+                    <div class="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-secondary to-transparent opacity-20 animate-scan"></div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="data-card !p-8 group">
+                        <div class="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600 mb-6 group-hover:bg-blue-600 group-hover:text-white transition-all">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 9H3m3.342-3.658l-.707-.707m12.728 12.728l-.707-.707M6.343 17.657l-.707.707M17.657 6.343l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                            </svg>
+                        </div>
+                        <h4 class="text-xl font-black mb-2 tracking-tighter">Weather Context</h4>
+                        <p id="weather-context" class="text-sm text-gray-500 font-light leading-relaxed">Integrated climate patterns suggest optimal fertilization window in <span class="font-bold text-dark">48 hours</span>.</p>
+                    </div>
+                    <div class="data-card !p-8 group">
+                        <div class="w-12 h-12 bg-accent/10 rounded-2xl flex items-center justify-center text-accent mb-6 group-hover:bg-accent group-hover:text-dark transition-all">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <h4 class="text-xl font-black mb-2 tracking-tighter">ROI Forecast</h4>
+                        <p id="roi-forecast" class="text-sm text-gray-500 font-light leading-relaxed">Applying this recommendation is expected to increase revenue by <span class="font-bold text-secondary">₹12,400 per acre</span>.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-dark text-white px-6 py-20 text-center rounded-t-[5rem]">
+        <div class="max-w-7xl mx-auto flex flex-col items-center gap-8">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 bg-primary rounded-2xl flex items-center justify-center text-white font-black text-xl shadow-lg">A</div>
+                <span class="text-3xl font-extrabold tracking-tighter">AgriCoop</span>
+            </div>
+            <p class="font-black text-xs uppercase tracking-[0.4em] opacity-40">&copy; 2026 AgriCoop | Powered by Soil Intelligence Core</p>
+        </div>
+    </footer>
+
+    <script src="./js/analytics.js"></script>
+    <script src="./js/soil-health.js"></script>
+</body>
+
+</html>

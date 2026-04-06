@@ -26,7 +26,15 @@ const translations = {
         expert_desc: "Our agronomists use the same data you see to provide hyper-local advice on crop healing and soil recovery.",
         btn_talk: "Initialize Consultation",
         stat_support: "Uptime Support",
-        stat_experts: "Data Scientists"
+        stat_experts: "Data Scientists",
+        soil_nav: "Soil Health",
+        soil_page_title: "Nurture Your Land with Precision Health",
+        soil_page_desc: "Reduce fertilizer waste and maximize yield. Our data-driven engine analyzes your soil metrics to provide hyper-tailored nutrient recommendations.",
+        analysis_params: "Analysis Parameters",
+        gen_rec: "Generate Recommendation",
+        nutrient_profile: "Nutrient Profile",
+        nutrient_desc: "Visual representation of soil health status",
+        back_btn: "← Back"
     },
     hi: {
         back_home: "← मुख्य पृष्ठ",
@@ -47,7 +55,15 @@ const translations = {
         expert_desc: "हमारे कृषि विज्ञानी उसी डेटा का उपयोग करते हैं जिसे आप फसल उपचार और मिट्टी की रिकवरी पर सलाह देने के लिए देखते हैं।",
         btn_talk: "परामर्श शुरू करें",
         stat_support: "अपटाइम सपोर्ट",
-        stat_experts: "डेटा वैज्ञानिक"
+        stat_experts: "डेटा वैज्ञानिक",
+        soil_nav: "मिट्टी का स्वास्थ्य",
+        soil_page_title: "सटीक स्वास्थ्य के साथ अपनी भूमि का पोषण करें",
+        soil_page_desc: "उर्वरक की बर्बादी कम करें और उपज अधिकतम करें। हमारा डेटा-संचालित इंजन आपको हाइपर-टेलर पोषक तत्व अनुशंसाएँ प्रदान करने के लिए आपके मिट्टी के मेट्रिक्स का विश्लेषण करता है।",
+        analysis_params: "विश्लेषण पैरामीटर",
+        gen_rec: "अनुशंसा उत्पन्न करें",
+        nutrient_profile: "पोषक तत्व प्रोफ़ाइल",
+        nutrient_desc: "मिट्टी के स्वास्थ्य की स्थिति का दृश्य प्रतिनिधित्व",
+        back_btn: "← पीछे"
     }
 };
 

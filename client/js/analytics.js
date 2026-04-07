@@ -34,7 +34,12 @@ const translations = {
         gen_rec: "Generate Recommendation",
         nutrient_profile: "Nutrient Profile",
         nutrient_desc: "Visual representation of soil health status",
-        back_btn: "← Back"
+        back_btn: "← Back",
+        weather_title: "Climate Resilience",
+        weather_desc: "Hyper-local atmospheric analysis for precision irrigation planning.",
+        weather_advice_1: "Optimal fertilization window detected. High nitrogen uptake efficiency expected in the next 36 hours.",
+        weather_advice_2: "Sudden temperature drop (\u003c20°C) expected tonight. Cover young saplings if possible.",
+        weather_advice_3: "Humidity spike (85%+) predicted. Scale back irrigation to prevent fungal growth."
     },
     hi: {
         back_home: "← मुख्य पृष्ठ",
@@ -63,7 +68,12 @@ const translations = {
         gen_rec: "अनुशंसा उत्पन्न करें",
         nutrient_profile: "पोषक तत्व प्रोफ़ाइल",
         nutrient_desc: "मिट्टी के स्वास्थ्य की स्थिति का दृश्य प्रतिनिधित्व",
-        back_btn: "← पीछे"
+        back_btn: "← पीछे",
+        weather_title: "जलवायु लचीलापन",
+        weather_desc: "सटीक सिंचाई योजना के लिए हाइपर-स्थानीय वायुमंडलीय विश्लेषण।",
+        weather_advice_1: "इष्टतम निषेचन विंडो का पता चला। अगले 36 घंटों में उच्च नाइट्रोजन अवशोषण दक्षता की उम्मीद है।",
+        weather_advice_2: "आज रात तापमान में अचानक गिरावट (\u003c20°C) की संभावना है। यदि संभव हो तो युवा पौधों को ढक दें।",
+        weather_advice_3: "नमी में उछाल (85%+) का पूर्वानुमान है। फंगल विकास को रोकने के लिए सिंचाई कम करें।"
     }
 };
 
@@ -105,6 +115,25 @@ document.addEventListener('DOMContentLoaded', () => {
     applyTranslations(savedLang);
     document.getElementById('lang-btn-text').textContent = savedLang === 'en' ? 'हिन्दी' : 'English';
     document.body.style.transition = 'opacity 0.4s ease';
+
+    // Weather Advice Rotator
+    const adviceEl = document.getElementById('weather-ai-advice');
+    if (adviceEl) {
+        const advices = [
+            translations[savedLang].weather_advice_1,
+            translations[savedLang].weather_advice_2,
+            translations[savedLang].weather_advice_3
+        ];
+        let currentAdvice = 0;
+        setInterval(() => {
+            adviceEl.style.opacity = '0';
+            setTimeout(() => {
+                currentAdvice = (currentAdvice + 1) % advices.length;
+                adviceEl.innerHTML = advices[currentAdvice];
+                adviceEl.style.opacity = '1';
+            }, 500);
+        }, 8000);
+    }
 });
 
 // Expose switchLanguage globally for onclick handlers

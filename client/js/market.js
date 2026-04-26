@@ -93,27 +93,23 @@ function filterProducts(category) {
 // ========================================
 async function placeOrder(productName, category, price, farmerName) {
     try {
-        const response = await fetch(`${API_BASE}/orders`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                user_email: currentUserEmail,
-                product_name: productName,
-                category: category,
-                price: price,
-                farmer_name: farmerName
-            })
-        });
-
-        const result = await response.json();
-        if (result.success) {
-            alert('Order placed successfully! Check "My Orders" tab.');
-        } else {
-            alert('Failed to place order: ' + result.message);
-        }
+        const order = {
+            id: Date.now(),
+            user_email: currentUserEmail,
+            product_name: productName,
+            category: category,
+            price: price,
+            farmer_name: farmerName,
+            status: 'Processing',
+            created_at: new Date().toISOString()
+        };
+        const existing = JSON.parse(localStorage.getItem('agriOrders') || '[]');
+        existing.push(order);
+        localStorage.setItem('agriOrders', JSON.stringify(existing));
+        alert('Order placed successfully! Check "My Orders" tab.');
     } catch (err) {
         console.error('Order error:', err);
-        alert('Connection error. Is your local server running?');
+        alert('Error placing order.');
     }
 }
 
@@ -125,11 +121,11 @@ async function loadOrders() {
     list.innerHTML = '<tr><td colspan="5" class="px-8 py-10 text-center text-slate-400">Loading your orders...</td></tr>';
 
     try {
-        const res = await fetch(`${API_BASE}/orders/${currentUserEmail}`);
-        const result = await res.json();
+        const orders = JSON.parse(localStorage.getItem('agriOrders') || '[]');
+        const userOrders = orders.filter(o => o.user_email === currentUserEmail);
         
-        if (result.success && result.data.length > 0) {
-            list.innerHTML = result.data.map(order => `
+        if (userOrders.length > 0) {
+            list.innerHTML = userOrders.map(order => `
                 <tr class="hover:bg-slate-50 transition-colors">
                     <td class="px-8 py-5">
                         <p class="font-bold text-slate-800">${order.product_name}</p>

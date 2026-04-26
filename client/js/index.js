@@ -174,15 +174,8 @@ if (regForm) {
         try {
             console.log("Starting submission for:", data);
 
-            // 1. Local Backend Save - We check this FIRST
-            const res = await fetch('http://localhost:3000/api/register', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            });
-            
-            if (!res.ok) throw new Error("Local server registration failed.");
-            const result = await res.json();
+            // Removed backend check to allow static serverless hosting to succeed.
+            // Data will fall back directly to Firebase.
 
             // 2. Firebase Firestore Save (Non-blocking / Background)
             if (db) {

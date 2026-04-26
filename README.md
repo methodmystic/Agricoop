@@ -4,7 +4,7 @@ AgriCoop is a farmer-first web platform that connects agricultural communities w
 
 The platform is built around three pillars: **AI-powered farming intelligence** (crop health forecasting, IoT soil metrics), a **fair-trade digital marketplace** (direct farmer-to-buyer listings with live mandi price tracking), and **rural skill empowerment** (digital literacy and agronomy support for farming communities).
 
-**Live → [agricoop-market.vercel.app](https://agricoop-market.vercel.app)**
+**Live → [https://agricooop.netlify.app/]**
 
 ---
 

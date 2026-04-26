@@ -18,6 +18,6 @@ The platform is built around three pillars: **AI-powered farming intelligence** 
 
 ## 💡 About This Project
 
-This was a vibe-coded project — built with the help of AI tools. But it genuinely served as my hands-on introduction to **Firebase** and **Vercel**. Wiring up authentication, managing a real-time database, and deploying a live production URL were all things I learned by actually doing them here.
+This was a vibe-coded project — built with the help of AI tools. But it genuinely served as my hands-on introduction to **Firebase** and **Netlify**. Wiring up authentication, managing a real-time database, and deploying a live production URL were all things I learned by actually doing them here.
 
 The code was AI-assisted. The learning was real.

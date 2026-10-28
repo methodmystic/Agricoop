@@ -16,7 +16,7 @@ permissions:
 
 jobs:
   deploy:
-    name: Production
+    name: Deploy to Netlify Production
     runs-on: ubuntu-latest
     environment:
       name: Production
@@ -35,18 +35,32 @@ jobs:
 
       - name: Compile Java JDBC Backend
         run: |
-          mvn -f server-java/pom.xml clean compile
+          mvn -f server-java/pom.xml clean compile -q
+          echo "Java backend compiled successfully."
 
       - name: Validate Client Frontend
         run: |
-          test -f client/index.html || exit 1
-          test -f client/js/index.js || exit 1
-          test -f client/js/market.js || exit 1
-          echo "Client static web application validated successfully."
+          test -f client/index.html || (echo "Missing client/index.html" && exit 1)
+          test -f client/js/index.js  || (echo "Missing client/js/index.js"  && exit 1)
+          test -f client/js/market.js || (echo "Missing client/js/market.js" && exit 1)
+          echo "Frontend files validated."
 
-      - name: Finalize Deployment Status
+      - name: Deploy to Netlify
+        uses: nwtgck/actions-netlify@v3.0
+        with:
+          publish-dir: './client'
+          production-branch: main
+          production-deploy: true
+          deploy-message: "Production deploy from GitHub Actions — ${{ github.sha }}"
+          enable-pull-request-comment: false
+          enable-commit-comment: false
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+
+      - name: Confirm Deployment
         run: |
-          echo "=========================================================="
-          echo " AgriCoop Production is active and verified!"
-          echo " URL: https://agricooop.netlify.app/"
-          echo "=========================================================="
+          echo "========================================================"
+          echo " AgriCoop deployed to production!"
+          echo " Live at: https://agricooop.netlify.app/"
+          echo "========================================================"

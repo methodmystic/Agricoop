@@ -105,15 +105,40 @@ if (authForm) {
         authSubmitBtn.style.opacity = '0.7';
 
         try {
+            // Helper: safely parse JSON response (avoids crash when server returns HTML error page)
+            async function safeJson(res) {
+                const text = await res.text();
+                try { return JSON.parse(text); }
+                catch (_) { return null; }
+            }
+
             if (isLoginMode) {
                 // --- LOGIN VIA JDBC MYSQL ---
-                const response = await fetch(`${API_BASE}/auth/login`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, password })
-                });
+                let response, result;
+                try {
+                    response = await fetch(`${API_BASE}/auth/login`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email, password })
+                    });
+                    result = await safeJson(response);
+                } catch (_) {
+                    result = null;
+                }
 
-                const result = await response.json();
+                if (!result) {
+                    // Server offline — try localStorage credentials
+                    const stored = JSON.parse(localStorage.getItem('currentUser') || 'null');
+                    if (stored && stored.email === email) {
+                        checkAuthState();
+                        if (authModal) authModal.classList.add('hidden');
+                        authForm.reset();
+                        alert(`Welcome back, ${stored.full_name || email}! (Offline mode — MySQL server not reachable)`);
+                        return;
+                    }
+                    throw new Error('Cannot reach AgriCoop server. Start the Java backend to sign in.');
+                }
+
                 if (!response.ok || !result.success) {
                     throw new Error(result.message || 'Login failed. Please verify your credentials.');
                 }
@@ -123,7 +148,7 @@ if (authForm) {
                 localStorage.setItem('userEmail', email);
                 checkAuthState();
 
-                // Optional Login Notification Alert
+                // Optional Login Notification Alert (fire-and-forget)
                 fetch(`${API_BASE}/login-notify`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -132,21 +157,34 @@ if (authForm) {
 
                 if (authModal) authModal.classList.add('hidden');
                 authForm.reset();
-                alert(`Welcome back, ${result.user?.full_name || email}! Logged in via MySQL.`);
+                alert(`Welcome back, ${result.user?.full_name || email}! Signed in via MySQL.`);
 
             } else {
                 // --- SIGNUP / REGISTER VIA JDBC MYSQL ---
-                const response = await fetch(`${API_BASE}/auth/signup`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        full_name: fullName,
-                        email: email,
-                        password: password
-                    })
-                });
+                let response, result;
+                try {
+                    response = await fetch(`${API_BASE}/auth/signup`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ full_name: fullName, email, password })
+                    });
+                    result = await safeJson(response);
+                } catch (_) {
+                    result = null;
+                }
 
-                const result = await response.json();
+                if (!result) {
+                    // Server offline — save account locally so user isn't stuck
+                    const offlineUser = { full_name: fullName, email, created_at: new Date().toISOString(), offline: true };
+                    localStorage.setItem('currentUser', JSON.stringify(offlineUser));
+                    localStorage.setItem('userEmail', email);
+                    checkAuthState();
+                    if (authModal) authModal.classList.add('hidden');
+                    authForm.reset();
+                    alert(`Account saved locally, ${fullName}! Start the Java backend to sync to MySQL.`);
+                    return;
+                }
+
                 if (!response.ok || !result.success) {
                     throw new Error(result.message || 'Registration failed. Email may already be in use.');
                 }
@@ -158,15 +196,18 @@ if (authForm) {
 
                 if (authModal) authModal.classList.add('hidden');
                 authForm.reset();
-                alert(`Account created successfully in AgriCoop MySQL database! Welcome, ${fullName}.`);
+                alert(`Account created in AgriCoop MySQL database! Welcome, ${fullName}.`);
             }
         } catch (error) {
             console.error('Authentication Error:', error);
+            const msg = error.message && !error.message.includes('JSON')
+                ? error.message
+                : 'Server offline. Start the Java backend to use MySQL auth.';
             if (authError) {
-                authError.textContent = error.message || 'Server connection error. Ensure Java backend is running.';
+                authError.textContent = msg;
                 authError.classList.remove('hidden');
             } else {
-                alert(error.message);
+                alert(msg);
             }
         } finally {
             authSubmitBtn.disabled = false;

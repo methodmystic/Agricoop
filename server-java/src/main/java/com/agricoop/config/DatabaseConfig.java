@@ -17,7 +17,7 @@ public class DatabaseConfig {
     private static String driver = "com.mysql.cj.jdbc.Driver";
     private static String url = "jdbc:mysql://localhost:3306/agricoop_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
     private static String user = "root";
-    private static String password = "root";
+    private static String password = "methodmystic@9906";
     private static int port = 3000;
 
     static {

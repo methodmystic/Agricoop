@@ -1,13 +1,11 @@
 # 🌾 AgriCoop — Next-Gen Agricultural Cooperative Platform
 
-[![Production Deployment](https://img.shields.io/badge/Production-Live%20on%20Vercel-black?logo=vercel)](https://agricoop-market.vercel.app)
-[![Live Mirror](https://img.shields.io/badge/Mirror-Netlify-00C7B7?logo=netlify&logoColor=white)](https://agricooop.netlify.app)
+[![Netlify Status](https://img.shields.io/badge/Netlify-Live%20Production-00C7B7?logo=netlify&logoColor=white)](https://agricooop.netlify.app/)
 [![Java 17](https://img.shields.io/badge/Java-17-ED8B00?logo=openjdk&logoColor=white)](https://openjdk.org/)
 [![MySQL 8.0](https://img.shields.io/badge/MySQL-8.0-4479A1?logo=mysql&logoColor=white)](https://www.mysql.com/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 
-> 🌐 **Live Production App**: **[https://agricoop-market.vercel.app](https://agricoop-market.vercel.app)**  
-> 🔗 **Alternative Live Mirror**: **[https://agricooop.netlify.app](https://agricooop.netlify.app)**
+> 🚀 **Live Production Deployment**: **[https://agricooop.netlify.app/](https://agricooop.netlify.app/)**
 
 ---
 
@@ -30,15 +28,42 @@
 ## 🏗️ Technology Stack
 
 * **Frontend**: HTML5, Tailwind CSS, Responsive UI, Vanilla JavaScript
+* **Production Hosting**: Netlify
 * **Backend**: Java 17, Multi-threaded HTTP Server
 * **Database Connectivity**: Java Database Connectivity (JDBC)
 * **Database**: MySQL Relational Database (`agricoop_db`)
 * **Security**: Salted BCrypt password hashing & parameterized SQL execution
-* **Cloud & Hosting**: Vercel & Docker containerization
+* **Containerization**: Docker & Docker Compose
 
 ---
 
-## 🚀 Local Quickstart
+## ⚡ Production Deployment (Netlify)
+
+The AgriCoop frontend is live in production on **Netlify**:
+
+👉 **Production URL**: **[https://agricooop.netlify.app/](https://agricooop.netlify.app/)**
+
+### Automatic CI/CD
+Netlify is connected to the GitHub repository. Pushing changes to the `main` branch automatically builds and updates the live site based on [`netlify.toml`](./netlify.toml):
+
+```toml
+[build]
+  publish = "client"
+```
+
+### Manual Deployment via CLI
+To push an immediate production build from the terminal:
+```bash
+npx netlify deploy --prod --dir=client
+```
+Or run the included Windows script:
+```cmd
+deploy.bat
+```
+
+---
+
+## 🚀 Local Quickstart (Full Stack)
 
 ### Prerequisites
 * **Java Development Kit (JDK 17+)**
@@ -66,27 +91,6 @@ java -cp "server-java/target/classes;server-java/lib/*" com.agricoop.AgriCoopSer
 
 Access the platform locally at:
 👉 **`http://localhost:3000`**
-
----
-
-## ⚡ Production Deployment
-
-### 🌐 Live URLs
-* **Primary (Vercel)**: [https://agricoop-market.vercel.app](https://agricoop-market.vercel.app)
-* **Secondary (Netlify)**: [https://agricooop.netlify.app](https://agricooop.netlify.app)
-
-### Deploying to Vercel
-The project includes a production [`vercel.json`](./vercel.json) configured to publish the client app with clean URL routing.
-
-1. Push your changes to GitHub (automatic CI/CD triggers on `main` branch).
-2. Or deploy directly using the CLI:
-```bash
-npx vercel --prod
-```
-or run the included Windows script:
-```cmd
-deploy.bat
-```
 
 ---
 

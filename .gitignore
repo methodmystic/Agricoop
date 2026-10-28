@@ -2,8 +2,10 @@
 node_modules/
 server/node_modules/
 
-# Vercel
-.vercel
+# Maven & Java
+target/
+server-java/target/
+*.class
 
 # SQLite database files
 *.sqlite
@@ -12,6 +14,10 @@ server/node_modules/
 *.db-shm
 *.db-wal
 
+# Vercel & Netlify
+.vercel
+.netlify
+
 # Temp files
 tracked.txt
 tracked_files.txt
@@ -19,3 +25,12 @@ tracked_files.txt
 # OS & Env
 .DS_Store
 .env
+db.properties.local
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.settings/
+.project
+.classpath

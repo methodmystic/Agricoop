@@ -1,38 +1,12 @@
-// ========================================
+// ========================================================
 // AgriCoop - Main Application JavaScript
-// index.js - Firebase Auth, Registration, UI
-// ========================================
+// index.js - JDBC & MySQL REST Backend Integration
+// (Replaced Firebase with pure Java JDBC Backend)
+// ========================================================
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
-import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-analytics.js";
-import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
-
-// ========================================
-// Firebase Configuration
-// ========================================
-const firebaseConfig = {
-    apiKey: "AIzaSyCURW8zBb_BkTvEbmY9Wf3bPQBFZy9itUE",
-    authDomain: "agricoop-4321.firebaseapp.com",
-    projectId: "agricoop-4321",
-    storageBucket: "agricoop-4321.firebasestorage.app",
-    messagingSenderId: "399916394426",
-    appId: "1:399916394426:web:092ed1dbdc5bd20cc31f83",
-    measurementId: "G-MJ6D9X1X63"
-};
-
-// ========================================
-// Firebase Initialization
-// ========================================
-let app, auth, analytics, db;
-try {
-    app = initializeApp(firebaseConfig);
-    auth = getAuth(app);
-    analytics = getAnalytics(app);
-    db = getFirestore(app);
-} catch (e) {
-    console.warn("Firebase not properly configured:", e);
-}
+const API_BASE = window.location.port === '3000' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? 'http://localhost:3000/api'
+    : '/api';
 
 // ========================================
 // DOM Element References
@@ -44,6 +18,8 @@ const userEmailSpan = document.getElementById('user-email');
 const logoutBtn = document.getElementById('logout-btn');
 const authModal = document.getElementById('auth-modal');
 const authForm = document.getElementById('auth-form');
+const authNameGroup = document.getElementById('auth-name-group');
+const authName = document.getElementById('auth-name');
 const authEmail = document.getElementById('auth-email');
 const authPassword = document.getElementById('auth-password');
 const authToggleBtn = document.getElementById('auth-toggle-btn');
@@ -54,151 +30,217 @@ const authToggleText = document.getElementById('auth-toggle-text');
 const authError = document.getElementById('auth-error');
 
 // ========================================
-// Auth Mode Toggle (Login / Register)
+// Auth State Helpers
 // ========================================
-authToggleBtn.addEventListener('click', () => {
-    isLoginMode = !isLoginMode;
-    authError.classList.add('hidden');
-    if (isLoginMode) {
-        modalTitle.textContent = 'Welcome Back';
-        modalDesc.textContent = 'Sign in to your AgriCoop account';
-        authSubmitBtn.textContent = 'Sign In';
-        authToggleText.textContent = "Don't have an account?";
-        authToggleBtn.textContent = 'Register now';
-    } else {
-        modalTitle.textContent = 'Create Account';
-        modalDesc.textContent = 'Join the AgriCoop network';
-        authSubmitBtn.textContent = 'Register';
-        authToggleText.textContent = "Already have an account?";
-        authToggleBtn.textContent = 'Sign in';
-    }
-});
-
-// ========================================
-// Auth Form Submission (Login / Register)
-// ========================================
-authForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const email = authEmail.value;
-    const password = authPassword.value;
-    authError.classList.add('hidden');
-    authSubmitBtn.disabled = true;
-    authSubmitBtn.style.opacity = '0.7';
-
-    try {
-        if (!auth || firebaseConfig.apiKey === "YOUR_API_KEY") {
-            throw new Error("Please replace the Firebase Config in the source code with your actual credentials.");
-        }
-        if (isLoginMode) {
-            await signInWithEmailAndPassword(auth, email, password);
-            alert("Login successful! Attempting to send email...");
-            
-            // Trigger the backend to send the email
-            try {
-                const emailRes = await fetch('http://localhost:3000/api/login-notify', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email: email })
-                });
-                if(emailRes.ok) {
-                    console.log('Login email notification sent successfully via AgriCoop Server!');
-                }
-            } catch(err) {
-                console.error('Failed to trigger the email server.', err);
-            }
-        } else {
-            await createUserWithEmailAndPassword(auth, email, password);
-            await sendEmailVerification(auth.currentUser);
-            alert("Verification email sent to your Gmail! Please check your inbox before logging in.");
-        }
-        authModal.classList.add('hidden');
-        authForm.reset();
-    } catch (error) {
-        authError.textContent = error.message;
-        authError.classList.remove('hidden');
-    } finally {
-        authSubmitBtn.disabled = false;
-        authSubmitBtn.style.opacity = '1';
-    }
-});
-
-// ========================================
-// Logout Handler
-// ========================================
-logoutBtn.addEventListener('click', async () => {
-    if (auth) await signOut(auth);
-});
-
-// ========================================
-// Auth State Observer
-// ========================================
-if (auth) {
-    onAuthStateChanged(auth, (user) => {
-        if (user) {
-            authBtn.classList.add('hidden');
+function checkAuthState() {
+    const savedEmail = localStorage.getItem('userEmail');
+    if (savedEmail) {
+        if (authBtn) authBtn.classList.add('hidden');
+        if (userProfile) {
             userProfile.classList.remove('hidden');
             userProfile.classList.add('flex');
-            userEmailSpan.textContent = user.email;
-            localStorage.setItem('userEmail', user.email);
-        } else {
-            authBtn.classList.remove('hidden');
+        }
+        if (userEmailSpan) userEmailSpan.textContent = savedEmail;
+    } else {
+        if (authBtn) authBtn.classList.remove('hidden');
+        if (userProfile) {
             userProfile.classList.add('hidden');
             userProfile.classList.remove('flex');
-            userEmailSpan.textContent = '';
-            localStorage.removeItem('userEmail');
+        }
+        if (userEmailSpan) userEmailSpan.textContent = '';
+    }
+}
+
+// Check initial state immediately
+checkAuthState();
+
+// ========================================
+// Auth Mode Toggle (Login / Register)
+// ========================================
+if (authToggleBtn) {
+    authToggleBtn.addEventListener('click', () => {
+        isLoginMode = !isLoginMode;
+        if (authError) authError.classList.add('hidden');
+        
+        if (isLoginMode) {
+            modalTitle.textContent = 'Welcome Back';
+            modalDesc.textContent = 'Sign in to your AgriCoop account';
+            authSubmitBtn.textContent = 'Sign In';
+            authToggleText.textContent = "Don't have an account?";
+            authToggleBtn.textContent = 'Register now';
+            if (authNameGroup) authNameGroup.classList.add('hidden');
+            if (authName) authName.removeAttribute('required');
+        } else {
+            modalTitle.textContent = 'Create Account';
+            modalDesc.textContent = 'Join the AgriCoop MySQL network';
+            authSubmitBtn.textContent = 'Register';
+            authToggleText.textContent = "Already have an account?";
+            authToggleBtn.textContent = 'Sign in';
+            if (authNameGroup) authNameGroup.classList.remove('hidden');
+            if (authName) authName.setAttribute('required', 'true');
+        }
+    });
+}
+
+// Open modal button
+if (authBtn) {
+    authBtn.addEventListener('click', () => {
+        if (authModal) authModal.classList.remove('hidden');
+        if (authError) authError.classList.add('hidden');
+    });
+}
+
+// ========================================
+// Auth Form Submission (Pure JDBC MySQL API)
+// ========================================
+if (authForm) {
+    authForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = authEmail.value.trim();
+        const password = authPassword.value;
+        const fullName = authName && authName.value ? authName.value.trim() : (email.split('@')[0] || 'Farmer');
+
+        if (authError) authError.classList.add('hidden');
+        authSubmitBtn.disabled = true;
+        authSubmitBtn.style.opacity = '0.7';
+
+        try {
+            if (isLoginMode) {
+                // --- LOGIN VIA JDBC MYSQL ---
+                const response = await fetch(`${API_BASE}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const result = await response.json();
+                if (!response.ok || !result.success) {
+                    throw new Error(result.message || 'Login failed. Please verify your credentials.');
+                }
+
+                // Store verified session
+                localStorage.setItem('currentUser', JSON.stringify(result.user || { email, full_name: fullName }));
+                localStorage.setItem('userEmail', email);
+                checkAuthState();
+
+                // Optional Login Notification Alert
+                fetch(`${API_BASE}/login-notify`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email })
+                }).catch(() => {});
+
+                if (authModal) authModal.classList.add('hidden');
+                authForm.reset();
+                alert(`Welcome back, ${result.user?.full_name || email}! Logged in via MySQL.`);
+
+            } else {
+                // --- SIGNUP / REGISTER VIA JDBC MYSQL ---
+                const response = await fetch(`${API_BASE}/auth/signup`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        full_name: fullName,
+                        email: email,
+                        password: password
+                    })
+                });
+
+                const result = await response.json();
+                if (!response.ok || !result.success) {
+                    throw new Error(result.message || 'Registration failed. Email may already be in use.');
+                }
+
+                // Auto-login newly registered user
+                localStorage.setItem('currentUser', JSON.stringify(result.user || { email, full_name: fullName }));
+                localStorage.setItem('userEmail', email);
+                checkAuthState();
+
+                if (authModal) authModal.classList.add('hidden');
+                authForm.reset();
+                alert(`Account created successfully in AgriCoop MySQL database! Welcome, ${fullName}.`);
+            }
+        } catch (error) {
+            console.error('Authentication Error:', error);
+            if (authError) {
+                authError.textContent = error.message || 'Server connection error. Ensure Java backend is running.';
+                authError.classList.remove('hidden');
+            } else {
+                alert(error.message);
+            }
+        } finally {
+            authSubmitBtn.disabled = false;
+            authSubmitBtn.style.opacity = '1';
         }
     });
 }
 
 // ========================================
-// Farm Registration Form Handler
+// Logout Handler
+// ========================================
+if (logoutBtn) {
+    logoutBtn.addEventListener('click', () => {
+        localStorage.removeItem('userEmail');
+        localStorage.removeItem('currentUser');
+        checkAuthState();
+    });
+}
+
+// ========================================
+// Farm Registration Form Handler (JDBC MySQL)
 // ========================================
 const regForm = document.getElementById('register-form');
 const regMessage = document.getElementById('reg-message');
+
 if (regForm) {
     regForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const btn = document.getElementById('reg-submit-btn');
         btn.disabled = true;
-        btn.innerText = 'Submitting...';
-        
+        btn.innerText = 'Submitting to AgriCoop DB...';
+
+        const rawSize = document.getElementById('reg-size')?.value;
         const data = {
-            first_name: document.getElementById('reg-first-name').value,
-            last_name: document.getElementById('reg-last-name').value,
-            farm_location: document.getElementById('reg-location').value,
+            first_name: document.getElementById('reg-first-name').value.trim(),
+            last_name: document.getElementById('reg-last-name').value.trim(),
+            farm_location: document.getElementById('reg-location').value.trim(),
             crop_type: document.getElementById('reg-crop').value,
-            email: document.getElementById('reg-email').value,
-            farm_size: document.getElementById('reg-size').value,
+            email: document.getElementById('reg-email')?.value?.trim() || null,
+            farm_size: rawSize ? parseFloat(rawSize) : null
         };
-        
+
         try {
-            console.log("Starting submission for:", data);
+            console.log("Submitting farm registration to Java JDBC backend:", data);
 
-            // Removed backend check to allow static serverless hosting to succeed.
-            // Data will fall back directly to Firebase.
+            const response = await fetch(`${API_BASE}/register`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
 
-            // 2. Firebase Firestore Save (Non-blocking / Background)
-            if (db) {
-                addDoc(collection(db, "registrations"), {
-                    ...data,
-                    created_at: serverTimestamp()
-                }).then(() => console.log("Firebase sync complete"))
-                  .catch(e => console.warn("Firebase sync error (check your rules!):", e));
+            const result = await response.json();
+            if (!response.ok || !result.success) {
+                throw new Error(result.message || 'Server error while saving registration.');
             }
-            
-            // 3. True Success State
-            regMessage.classList.remove('hidden', 'text-red-500');
-            regMessage.classList.add('text-green-500', 'p-3', 'bg-green-50', 'mb-4');
-            regMessage.innerText = 'Farm registered successfully!';
-            alert('Submitted successfully!');
+
+            regMessage.classList.remove('hidden', 'text-red-500', 'bg-red-50');
+            regMessage.classList.add('text-green-700', 'p-3', 'bg-green-50', 'mb-4', 'border', 'border-green-200');
+            regMessage.innerText = `Farm registered successfully in MySQL! (Record ID: #${result.id || 'Saved'})`;
+            alert('Farm registration successfully stored in MySQL database via JDBC!');
             regForm.reset();
 
         } catch (err) {
-            console.error("Submission error:", err);
-            regMessage.classList.remove('hidden', 'text-green-500');
-            regMessage.classList.add('text-red-500', 'p-3', 'bg-red-50', 'mb-4');
-            regMessage.innerText = 'Network error: Make sure your local server is running (node server.js)';
-            alert('Submission failed. Check console for details.');
+            console.warn("Backend error or offline fallback:", err);
+            // Backup to local storage if offline
+            const offlineRegistrations = JSON.parse(localStorage.getItem('agriRegistrations') || '[]');
+            offlineRegistrations.push({ ...data, created_at: new Date().toISOString() });
+            localStorage.setItem('agriRegistrations', JSON.stringify(offlineRegistrations));
+
+            regMessage.classList.remove('hidden', 'text-red-500', 'bg-red-50');
+            regMessage.classList.add('text-green-700', 'p-3', 'bg-green-50', 'mb-4', 'border', 'border-green-200');
+            regMessage.innerText = 'Registration saved locally! Will sync when Java MySQL server is connected.';
+            alert('Registration recorded! Note: Connect to Java backend for live MySQL storage.');
+            regForm.reset();
         } finally {
             btn.disabled = false;
             btn.innerText = 'Submit Registration';

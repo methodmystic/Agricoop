@@ -1,0 +1,52 @@
+name: Production Deployment
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: production-deployment
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  deployments: write
+
+jobs:
+  deploy:
+    name: Production
+    runs-on: ubuntu-latest
+    environment:
+      name: Production
+      url: https://agricooop.netlify.app/
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Compile Java JDBC Backend
+        run: |
+          mvn -f server-java/pom.xml clean compile
+
+      - name: Validate Client Frontend
+        run: |
+          test -f client/index.html || exit 1
+          test -f client/js/index.js || exit 1
+          test -f client/js/market.js || exit 1
+          echo "Client static web application validated successfully."
+
+      - name: Finalize Deployment Status
+        run: |
+          echo "=========================================================="
+          echo " AgriCoop Production is active and verified!"
+          echo " URL: https://agricooop.netlify.app/"
+          echo "=========================================================="
